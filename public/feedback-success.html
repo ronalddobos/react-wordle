@@ -150,38 +150,22 @@
 <body>
     <div class="container">
         <div class="row">
-            <h1>Contact us</h1>
+            <h1>Thanks you</h1>
         </div>
         <div class="row">
-            <h4 style="text-align:center">We'd love to hear from you!</h4>
+            <h4 style="text-align:center">We've collected your feedback</h4>
         </div>
-        <form name="feedback" action="/feedback-success" method="post" class="row input-container" netlify>
-            <div class="col-xs-12">
-                <div class="styled-input wide">
-                    <input type="text" name="name" required />
-                    <label>Name</label>
-                </div>
-            </div>
-            <div class="col-md-6 col-sm-12">
-                <div class="styled-input">
-                    <input type="text" name="email" required />
-                    <label>Email</label>
-                </div>
-            </div>
-            <div class="col-xs-12">
-                <div class="styled-input wide">
-                    <textarea name="text" required></textarea>
-                    <label>Message</label>
-                </div>
-            </div>
-            <div class="col-xs-12">
-                <button type="submit" class="btn-lrg submit-btn">Send Message
-                </button>
-            </div>
-        </form>
+        <div class="col-xs-12">
+            <button id="close" class="btn-lrg submit-btn">Back to app
+            </button>
+        </div>
     </div>
 
-
+    <script>
+        document.getElementById('close').addEventListener('click', function () {
+            window.close();
+        });
+    </script>
 </body>
 
 </html>

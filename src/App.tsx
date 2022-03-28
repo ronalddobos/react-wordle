@@ -254,7 +254,11 @@ function App() {
         setIsStatsModalOpen={setIsStatsModalOpen}
         setIsSettingsModalOpen={setIsSettingsModalOpen}
       />
-      {loading && <InfinitySpin width="60" color="grey" />}
+      {loading && (
+        <div className="w-full flex flex-col justify-center items-center">
+          <InfinitySpin width="240" color="grey" />
+        </div>
+      )}
       {!loading && (
         <div className="pt-2 px-1 pb-8 md:max-w-7xl w-full mx-auto sm:px-6 lg:px-8 flex flex-col grow">
           <div className="pb-6 grow">
@@ -272,6 +276,15 @@ function App() {
             guesses={guesses}
             isRevealing={isRevealing}
           />
+          <button
+            type="button"
+            className="mt-2 w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm"
+            onClick={() => {
+              window.open('/feedback', '_blank')
+            }}
+          >
+            Give us feedback
+          </button>
           <InfoModal
             isOpen={isInfoModalOpen}
             handleClose={() => setIsInfoModalOpen(false)}
