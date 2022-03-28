@@ -145,7 +145,7 @@ function App() {
 
   useEffect(() => {
     saveGameStateToLocalStorage({ guesses, solution })
-  }, [guesses])
+  }, [guesses, solution])
 
   useEffect(() => {
     if (isGameWon) {
