@@ -9,12 +9,9 @@ const handler: Handler = async (event, context) => {
     const index = Math.floor((now - epochMs) / msInDay)
     const solution = WORDS[index]
 
-
-
     return {
         statusCode: 200,
         body: JSON.stringify({ solution })
-
     }
 };
 
