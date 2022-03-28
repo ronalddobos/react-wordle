@@ -3,6 +3,7 @@ import { Key } from './Key'
 import { useEffect } from 'react'
 import { ENTER_TEXT, DELETE_TEXT } from '../../constants/strings'
 import { localeAwareUpperCase } from '../../lib/words'
+import { getSolution } from '../../hooks/useSolution'
 
 type Props = {
   onChar: (value: string) => void
@@ -19,7 +20,7 @@ export const Keyboard = ({
   guesses,
   isRevealing,
 }: Props) => {
-  const charStatuses = getStatuses(guesses)
+  const charStatuses = getStatuses(guesses, getSolution())
 
   const onClick = (value: string) => {
     if (value === 'ENTER') {

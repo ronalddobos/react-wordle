@@ -22,7 +22,6 @@ import {
 import {
   isWordInWordList,
   isWinningWord,
-  solution,
   findFirstUnusedReveal,
   unicodeLength,
 } from './lib/words'
@@ -39,11 +38,17 @@ import './App.css'
 import { AlertContainer } from './components/alerts/AlertContainer'
 import { useAlert } from './context/AlertContext'
 import { Navbar } from './components/navbar/Navbar'
+import { useValidGuesses } from './hooks/useValidGuesses'
+import { InfinitySpin } from 'react-loader-spinner'
+import { useSolution } from './hooks/useSolution'
 
 function App() {
   const prefersDarkMode = window.matchMedia(
     '(prefers-color-scheme: dark)'
   ).matches
+
+  const [loadingValid, validGuesses] = useValidGuesses()
+  const [loadingSolution, solution] = useSolution()
 
   const { showError: showErrorAlert, showSuccess: showSuccessAlert } =
     useAlert()
@@ -189,7 +194,7 @@ function App() {
       })
     }
 
-    if (!isWordInWordList(currentGuess)) {
+    if (!isWordInWordList(currentGuess, validGuesses)) {
       setCurrentRowClass('jiggle')
       return showErrorAlert(WORD_NOT_FOUND_MESSAGE, {
         onClose: clearCurrentRowClass,
@@ -214,7 +219,7 @@ function App() {
       setIsRevealing(false)
     }, REVEAL_TIME_MS * MAX_WORD_LENGTH)
 
-    const winningWord = isWinningWord(currentGuess)
+    const winningWord = isWinningWord(currentGuess, solution)
 
     if (
       unicodeLength(currentGuess) === MAX_WORD_LENGTH &&
@@ -240,6 +245,8 @@ function App() {
     }
   }
 
+  const loading = loadingValid || loadingSolution
+
   return (
     <div className="h-screen flex flex-col">
       <Navbar
@@ -247,51 +254,54 @@ function App() {
         setIsStatsModalOpen={setIsStatsModalOpen}
         setIsSettingsModalOpen={setIsSettingsModalOpen}
       />
-      <div className="pt-2 px-1 pb-8 md:max-w-7xl w-full mx-auto sm:px-6 lg:px-8 flex flex-col grow">
-        <div className="pb-6 grow">
-          <Grid
+      {loading && <InfinitySpin width="60px" color="grey" />}
+      {!loading && (
+        <div className="pt-2 px-1 pb-8 md:max-w-7xl w-full mx-auto sm:px-6 lg:px-8 flex flex-col grow">
+          <div className="pb-6 grow">
+            <Grid
+              guesses={guesses}
+              currentGuess={currentGuess}
+              isRevealing={isRevealing}
+              currentRowClassName={currentRowClass}
+            />
+          </div>
+          <Keyboard
+            onChar={onChar}
+            onDelete={onDelete}
+            onEnter={onEnter}
             guesses={guesses}
-            currentGuess={currentGuess}
             isRevealing={isRevealing}
-            currentRowClassName={currentRowClass}
           />
+          <InfoModal
+            isOpen={isInfoModalOpen}
+            handleClose={() => setIsInfoModalOpen(false)}
+          />
+          <StatsModal
+            isOpen={isStatsModalOpen}
+            handleClose={() => setIsStatsModalOpen(false)}
+            guesses={guesses}
+            gameStats={stats}
+            isGameLost={isGameLost}
+            isGameWon={isGameWon}
+            handleShareToClipboard={() => showSuccessAlert(GAME_COPIED_MESSAGE)}
+            isHardMode={isHardMode}
+            isDarkMode={isDarkMode}
+            isHighContrastMode={isHighContrastMode}
+            numberOfGuessesMade={guesses.length}
+          />
+          <SettingsModal
+            isOpen={isSettingsModalOpen}
+            handleClose={() => setIsSettingsModalOpen(false)}
+            isHardMode={isHardMode}
+            handleHardMode={handleHardMode}
+            isDarkMode={isDarkMode}
+            handleDarkMode={handleDarkMode}
+            isHighContrastMode={isHighContrastMode}
+            handleHighContrastMode={handleHighContrastMode}
+          />
+          <AlertContainer />
         </div>
-        <Keyboard
-          onChar={onChar}
-          onDelete={onDelete}
-          onEnter={onEnter}
-          guesses={guesses}
-          isRevealing={isRevealing}
-        />
-        <InfoModal
-          isOpen={isInfoModalOpen}
-          handleClose={() => setIsInfoModalOpen(false)}
-        />
-        <StatsModal
-          isOpen={isStatsModalOpen}
-          handleClose={() => setIsStatsModalOpen(false)}
-          guesses={guesses}
-          gameStats={stats}
-          isGameLost={isGameLost}
-          isGameWon={isGameWon}
-          handleShareToClipboard={() => showSuccessAlert(GAME_COPIED_MESSAGE)}
-          isHardMode={isHardMode}
-          isDarkMode={isDarkMode}
-          isHighContrastMode={isHighContrastMode}
-          numberOfGuessesMade={guesses.length}
-        />
-        <SettingsModal
-          isOpen={isSettingsModalOpen}
-          handleClose={() => setIsSettingsModalOpen(false)}
-          isHardMode={isHardMode}
-          handleHardMode={handleHardMode}
-          isDarkMode={isDarkMode}
-          handleDarkMode={handleDarkMode}
-          isHighContrastMode={isHighContrastMode}
-          handleHighContrastMode={handleHighContrastMode}
-        />
-        <AlertContainer />
-      </div>
+      )}
     </div>
   )
 }
