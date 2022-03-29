@@ -27,6 +27,7 @@
   },
   "scripts": {
     "build": "react-scripts build",
+    "postbuild": "node postbuild.js",
     "eject": "react-scripts eject",
     "fix": "prettier --write src",
     "lint": "prettier --check src",
