@@ -8,10 +8,18 @@ export const useValidGuesses = () => {
     useEffect(() => {
 
         const fetchData = async () => {
+
             setLoading(true);
-            const response = await fetch(`${process.env.REACT_APP_API_URL}/valid`);
-            const json = await response.json();
-            setResults(json.valid);
+            try {
+                const response = await fetch(`${process.env.REACT_APP_API_URL}/valid`);
+                const json = await response.json();
+                setResults(json.valid);
+
+            } catch (e) {
+                console.error(e);
+                setResults([]);
+            }
+
             setLoading(false);
         };
 

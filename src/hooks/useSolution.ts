@@ -12,11 +12,20 @@ export const useSolution = () => {
 
         const fetchData = async () => {
             setLoading(true);
-            const response = await fetch(`${process.env.REACT_APP_API_URL}/solution`);
-            const json = await response.json();
-            solution = localeAwareUpperCase(json.solution);
-            setResults(solution);
-            setLoading(false);
+
+            try {
+                const response = await fetch(`${process.env.REACT_APP_API_URL}/solution`);
+                const json = await response.json();
+                solution = localeAwareUpperCase(json.solution);
+                setResults(solution);
+
+            } catch (e) {
+                console.error(e);
+                setResults("WORDS")
+            }
+            finally {
+                setLoading(false);
+            }
         };
 
         fetchData();
